@@ -5,8 +5,11 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app
+from app import app, db
 from flask import render_template, request, jsonify, send_file
+from werkzeug.utils import secure_filename
+from flask_wtf.csrf import generate_csrf
+from app.forms import PostForm
 from app.models import Post
 import os
 
@@ -19,6 +22,47 @@ import os
 def index():
     return jsonify(message="This is the beginning of our API")
 
+@app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
+def userPosts(user_id):
+    posts = Post.query.filter_by(user_id=user_id).all()
+    postLst = []
+
+    for post in posts:
+        postLst.append({
+            "id": post.id,
+            "caption": post.caption,
+            "photo": post.photo,
+            "user_id": post.user_id,
+            "created_on": post.created_on
+        })
+    
+    data = {"posts": postLst}
+    return jsonify(data)
+
+@app.route('/api/v1/users/<user_id>/posts', methods=['POST'])
+def addPost(user_id):
+    form = PostForm()
+
+    if form.validate_on_submit():
+        caption = form.caption.data
+        photo = form.photo.data
+
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename
+        ))
+
+        newPost = Post(caption, filename, user_id)
+        db.session.add(newPost)
+        db.session.commit()
+
+        return jsonify({"message": "Successfully created a new post"})
+    else:
+        formErrors = form_errors(form)
+        errors = {
+            "errors": formErrors
+        }
+        return jsonify(errors)
 
 ###
 # The functions below should be applicable to all Flask apps.
