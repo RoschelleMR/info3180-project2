@@ -6,7 +6,7 @@ This file creates your application.
 """
 
 from app import app, db
-from flask import render_template, request, jsonify, send_file
+from flask import render_template, request, jsonify, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
 from app.forms import PostForm
@@ -22,6 +22,10 @@ import os
 def index():
     return jsonify(message="This is the beginning of our API")
 
+@app.route('/api/v1/csrf-token', methods=['GET'])
+def get_csrf():
+    return jsonify({'csrf_token': generate_csrf()})
+
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
 def userPosts(user_id):
     posts = Post.query.filter_by(user_id=user_id).all()
@@ -31,7 +35,7 @@ def userPosts(user_id):
         postLst.append({
             "id": post.id,
             "caption": post.caption,
-            "photo": post.photo,
+            "photo": "/api/v1/photos/{}".format(post.photo),
             "user_id": post.user_id,
             "created_on": post.created_on
         })
@@ -64,6 +68,10 @@ def addPost(user_id):
         }
         return jsonify(errors)
 
+@app.route('/api/v1/photos/<filename>')
+def getPoster(filename):
+    root_dir = os.getcwd()
+    return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), filename)
 ###
 # The functions below should be applicable to all Flask apps.
 ###
