@@ -1,7 +1,7 @@
 # Add any form classes for Flask-WTF here
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, TextAreaField
+from wtforms import StringField, TextAreaField, PasswordField
 from wtforms.validators import InputRequired
 from flask_wtf.csrf import CSRFProtect
 
@@ -11,3 +11,7 @@ class PostForm(FlaskForm):
             FileRequired(),
             FileAllowed(['jpg', 'png'], 'Images only!')
         ])
+    
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[InputRequired()])
