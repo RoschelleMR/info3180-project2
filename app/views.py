@@ -5,12 +5,14 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app, db
+from app import app, db, login_manager
 from flask import render_template, request, jsonify, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
-from app.forms import PostForm
-from app.models import Post
+from flask_login import login_user, logout_user, current_user, login_required
+from werkzeug.security import check_password_hash
+from app.forms import PostForm, LoginForm
+from app.models import Post, Users
 import os
 
 
@@ -72,6 +74,61 @@ def addPost(user_id):
 def getPoster(filename):
     root_dir = os.getcwd()
     return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), filename)
+
+
+# Login route
+@app.route('/api/v1/login', methods=['POST'])
+def login():
+    
+    form = LoginForm()
+    
+    message = ''
+    
+    if request.method == "POST":
+        if form.validate_on_submit():
+            
+            # Get the username and password values from the form.
+            
+            username = form.username.data
+            password = form.password.data
+            
+            
+            user = db.session.execute(db.select(Users).filter_by(username=username)).scalar()
+            
+            if user is not None and (check_password_hash(user.password, password)):
+                # Gets user id, load into session
+                login_user(user)
+
+                message = {'username': username, 'password': password}
+                
+            else:
+                
+                message = {'errors': ['Username or password not correct']}
+                
+        else:
+            errors = form_errors(form)
+        
+            if (errors):
+                
+                error_list = {"errors": []}
+                
+                error_list['errors'] = errors
+                
+                message = jsonify(error_list)
+                
+        
+        return message  
+        
+   
+     
+
+@login_manager.user_loader
+def load_user(id):
+    return db.session.execute(db.select(Users).filter_by(id=id)).scalar()
+
+
+
+
 ###
 # The functions below should be applicable to all Flask apps.
 ###
@@ -110,7 +167,7 @@ def add_header(response):
     return response
 
 
-@app.errorhandler(404)
-def page_not_found(error):
-    """Custom 404 page."""
-    return render_template('404.html'), 404
+# @app.errorhandler(404)
+# def page_not_found(error):
+#     """Custom 404 page."""
+#     return render_template('404.html'), 404
