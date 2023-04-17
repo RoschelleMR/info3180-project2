@@ -15,3 +15,28 @@
     </form>
 </template>
             
+<style>
+*{
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+    box-sizing: border-box; 
+}
+
+form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+label{
+    display: block;
+    font-size: 22px;
+    margin-bottom: 13px;
+}
+
+.photoCaption{
+    background-color: white;
+    border-color: gray;
+    box-shadow: 0px 0px 2px 2px gray;
+
+}
