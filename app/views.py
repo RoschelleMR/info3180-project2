@@ -114,12 +114,22 @@ def login():
                 
                 error_list['errors'] = errors
                 
-                message = jsonify(error_list)
+                message = error_list
                 
         
-        return message  
+        return jsonify(message)  
         
    
+#Logout route
+
+@app.route("/api/v1/logout")
+def logout():
+    
+    logout_user()
+    
+    message = {'message':'Successfully logged out'}
+    
+    return jsonify(message)
      
 
 @login_manager.user_loader
