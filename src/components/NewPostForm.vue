@@ -38,5 +38,8 @@ label{
     background-color: white;
     border-color: gray;
     box-shadow: 0px 0px 2px 2px gray;
+}
 
+button{
+    
 }
