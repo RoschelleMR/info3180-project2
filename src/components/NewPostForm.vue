@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent = "submitForm" id = "NewPostForm">
         <h1>New Post</h1>
-        <div class = "photoCaption"
+        <div class = "photoCaption">
             <div class = "photo">
                 <label for="photo" class="form-label">Photo</label>
                 <input type = "file" id = "img" name = "img" class = "formcontrol" accept = ".jpg, .png"/>
