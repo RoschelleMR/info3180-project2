@@ -22,6 +22,13 @@
             <li class="nav-item">
               <RouterLink class="nav-link" to="/about">About</RouterLink>
             </li>
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/explore">Explore</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink v-if="isLoggedIn == 'false'" class="nav-link" to="/login">Login</RouterLink>
+              <RouterLink v-else class="nav-link" to="/logout">Logout</RouterLink>
+            </li>
           </ul>
         </div>
       </div>
@@ -30,7 +37,10 @@
 </template>
 
 <script setup>
+
 import { RouterLink } from "vue-router";
+let isLoggedIn = localStorage.getItem('isLogin');
+
 </script>
 
 <style>
