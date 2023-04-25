@@ -7,7 +7,7 @@ const props = defineProps(['posts'])
 <template>
 <div class="feed container text-center">
     <div class="imgBox" v-for="post in posts" :key="post.id">
-        <img :src="post.photo" :alt="post.caption">
+        <img :src="post.photo" :alt="post.description">
     </div>
 </div>
 </template>
