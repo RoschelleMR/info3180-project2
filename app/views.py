@@ -72,10 +72,11 @@ def requires_auth(f):
 @app.route("/api/v1/generate-token")
 def generate_token():
     timestamp = datetime.utcnow()
+    # do i update to have username and password?
     payload = {
         "sub": 1,
         "iat": timestamp,
-        "exp": timestamp + timedelta(minutes=3)
+        "exp": timestamp + timedelta(minutes=5)
     }
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
@@ -87,7 +88,7 @@ def generate_token():
 
 
 ###
-# Routing for your application.
+# Routing the application.
 ###
 
 @app.route('/')
@@ -165,7 +166,7 @@ def login():
                 # Gets user id, load into session
                 login_user(user)
 
-                message = {'username': username, 'password': password}
+                message = {generate_token()}
                 
             else:
                 
@@ -188,10 +189,10 @@ def login():
    
 #Logout route
 
-@requires_auth
+
 @app.route("/api/v1/auth/logout", methods=['POST'])
+@requires_auth
 def logout():
-    
     
     logout_user()
     
