@@ -24,9 +24,10 @@
     let csrf_token = ref("");
 
      
-    // let token = localStorage.getItem('token')
-    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY4MjQyMjI1OSwiZXhwIjoxNjgyNDIzMTU5fQ.6K7KNYlr9T4GkNpY2SYJg1j4F9YOVNtXSWrsxiyPdo4"
-    console.log(token)
+    let token = localStorage.getItem('token')
+    
+    let test_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY4MjQyMjI1OSwiZXhwIjoxNjgyNDIzMTU5fQ.6K7KNYlr9T4GkNpY2SYJg1j4F9YOVNtXSWrsxiyPdo4"
+    console.log(test_token)
 
     function getCsrfToken() {     
         fetch('/api/v1/csrf-token')       
