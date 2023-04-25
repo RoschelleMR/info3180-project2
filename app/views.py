@@ -26,6 +26,25 @@ def index():
 def get_csrf():
     return jsonify({'csrf_token': generate_csrf()})
 
+@app.route('/api/v1/posts', methods=['GET'])
+def allPosts():
+    posts = Post.query.all()
+    postLst = []
+
+    for post in posts:
+        #likes = Likes.query.filter_by(post_id=post.id).all() #Waiting to be implemented
+        postLst.append({
+            "id": post.id,
+            "user_id": post.user_id,
+            "photo": "/api/v1/photos/{}".format(post.photo),
+            "caption": post.caption,
+            "created_on": post.created_on
+            #"likes": likes
+        })
+    
+    data = {"posts": postLst}
+    return jsonify(data)
+
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
 def userPosts(user_id):
     posts = Post.query.filter_by(user_id=user_id).all()
@@ -34,9 +53,9 @@ def userPosts(user_id):
     for post in posts:
         postLst.append({
             "id": post.id,
-            "caption": post.caption,
-            "photo": "/api/v1/photos/{}".format(post.photo),
             "user_id": post.user_id,
+            "photo": "/api/v1/photos/{}".format(post.photo),
+            "description": post.caption,
             "created_on": post.created_on
         })
     
@@ -50,14 +69,13 @@ def addPost(user_id):
     if form.validate_on_submit():
         caption = form.caption.data
         photo = form.photo.data
-
         filename = secure_filename(photo.filename)
-        photo.save(os.path.join(
-            app.config['UPLOAD_FOLDER'], filename
-        ))
 
         newPost = Post(caption, filename, user_id)
         db.session.add(newPost)
+        photo.save(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename
+        ))
         db.session.commit()
 
         return jsonify({"message": "Successfully created a new post"})

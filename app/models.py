@@ -55,7 +55,7 @@ class Post(db.Model):
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)
-    caption = db.Column(db.String(250))
+    caption = db.Column(db.String(2000))
     photo = db.Column(db.String(250))
     user_id = db.Column(db.Integer)
     created_on = db.Column(db.DateTime, default=datetime.datetime.utcnow)
