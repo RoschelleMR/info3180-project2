@@ -50,14 +50,13 @@ def addPost(user_id):
     if form.validate_on_submit():
         caption = form.caption.data
         photo = form.photo.data
-
         filename = secure_filename(photo.filename)
-        photo.save(os.path.join(
-            app.config['UPLOAD_FOLDER'], filename
-        ))
 
         newPost = Post(caption, filename, user_id)
         db.session.add(newPost)
+        photo.save(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename
+        ))
         db.session.commit()
 
         return jsonify({"message": "Successfully created a new post"})

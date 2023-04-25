@@ -20,7 +20,6 @@
             else{return Promise.reject('Something was wrong with fetch request!')}
         })
         .then(data => {
-            console.log(data)
             posts.value = data["posts"]
         })
         .catch(error => {
@@ -35,17 +34,12 @@
     //         else{return Promise.reject('Something was wrong with fetch request!')}
     //     })
     //     .then(data => {
-    //         console.log("USERDETAILS")
-    //         console.log(data);
     //         userDetails.value = data
     //     })
     //     .catch(error => {
     //         console.log(error);
     //     })
     // }
-
-    
-
 
     // function fetchFollowers(){
     //     fetch(`/api/v1/users/${id}/follow`)
@@ -54,7 +48,6 @@
     //         else{return Promise.reject('Something was wrong with fetch request!')}
     //     })
     //     .then(data => {
-    //         console.log(data);
     //         followers.value = data["followers"]
     //     })
     //     .catch(error => {
@@ -62,13 +55,13 @@
     //     })
     // }
 
-    // function hasUserDetails() {
-    //     return userDetails.hasOwnProperty("username"); //Checks if data is set in userDetails
-    // }
+    function hasUserDetails() {
+        return userDetails.hasOwnProperty("username"); //Checks if data is set in userDetails
+    }
 
     onMounted(() => {
-        //fetchUserDetails()
-        //fetchFollowers()
+        // fetchUserDetails()
+        // fetchFollowers()
         fetchPosts()
     })
 
@@ -76,8 +69,8 @@
 </script>
 
 <template>
-    <!-- <UserProfileHeader v-if="hasUserDetails" userDetails="userDetails" followers="followers"/> -->
-    <UserPhotos posts="posts"/>
+    <!-- <UserProfileHeader v-if="hasUserDetails" :userDetails="userDetails" :followers="followers"/> -->
+    <UserPhotos v-if="posts" :posts="posts"/>
 </template>
 
 <style>
