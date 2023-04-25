@@ -3,7 +3,7 @@
     <form @submit.prevent="loginUser" id='loginForm' class="row g-3"> 
 
         <div v-if = "response_type == 'success'" class="alert alert-success">
-            {{ response.message }}
+            <p>Successfully Logged In</p>
         </div>
 
         <div v-if = "response_type == 'error'" class="alert alert-danger">
@@ -58,7 +58,7 @@
         let loginForm = document.getElementById('loginForm'); 
         let form_data = new FormData(loginForm);
 
-        fetch("/api/v1/login", {     
+        fetch("/api/v1/auth/login", {     
             method: 'POST', 
             body: form_data,
             headers: {             
@@ -77,8 +77,9 @@
                     response_type.value = 'error';
                 }   
                 else{
-                    response.value = data;
                     response_type.value = 'success';
+
+                    localStorage.setItem( 'token', JSON.stringify(data.token) );
                 }  
             })     
             .catch(function (error) {         
