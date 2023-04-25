@@ -2,10 +2,6 @@
 
     <form @submit.prevent="loginUser" id='loginForm' class="row g-3"> 
 
-        <div v-if = "response_type == 'success'" class="alert alert-success">
-            <p>Successfully Logged In</p>
-        </div>
-
         <div v-if = "response_type == 'error'" class="alert alert-danger">
             <ul>
                 <li v-for="error in response.errors">
@@ -26,7 +22,8 @@
 
 
         <div>
-            <input type="submit" value="Login">
+            <!-- <input type="submit" value="Login"> -->
+            <input type="submit" value="Login"/>
         </div>
 
 
@@ -38,11 +35,14 @@
 
     import { ref, onMounted } from "vue"; onMounted(() => {     
         getCsrfToken(); 
-    }); 
+    });
+    import {useRouter} from "vue-router";
+    const router = useRouter()
 
     let csrf_token = ref("");  
     let response = ref([]);
     let response_type = ref("");
+
 
     function getCsrfToken() {     
         fetch('/api/v1/csrf-token')       
@@ -57,6 +57,8 @@
 
         let loginForm = document.getElementById('loginForm'); 
         let form_data = new FormData(loginForm);
+
+        
 
         fetch("/api/v1/auth/login", {     
             method: 'POST', 
@@ -75,16 +77,19 @@
                 if(data.hasOwnProperty('errors')){
                     response.value = data;
                     response_type.value = 'error';
+
                 }   
                 else{
                     response_type.value = 'success';
-
-                    localStorage.setItem( 'token', JSON.stringify(data.token) );
+                    localStorage.setItem('token', JSON.stringify(data.token) ); 
+                    router.push({ path : '/explore' }); 
                 }  
             })     
             .catch(function (error) {         
                 console.log(error, 'Error');     
             });
+
     }
+
 
 </script>
