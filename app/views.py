@@ -76,7 +76,7 @@ def generate_token():
     payload = {
         "sub": 1,
         "iat": timestamp,
-        "exp": timestamp + timedelta(minutes=5)
+        "exp": timestamp + timedelta(minutes=15)
     }
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
@@ -196,7 +196,7 @@ def logout():
     
     logout_user()
     
-    message = {'message':'Successfully logged out'}
+    message = {'success':'Successfully logged out'}
     
     return jsonify(message)
      
