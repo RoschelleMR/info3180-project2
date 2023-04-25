@@ -42,6 +42,8 @@
     let csrf_token = ref("");  
     let response = ref([]);
     let response_type = ref("");
+    
+    localStorage.setItem('isLogin', false ); 
 
 
     function getCsrfToken() {     
@@ -81,7 +83,10 @@
                 }   
                 else{
                     response_type.value = 'success';
-                    localStorage.setItem('token', JSON.stringify(data.token) ); 
+                    localStorage.setItem('token', JSON.stringify(data.token)); 
+
+                    localStorage.setItem('isLogin', true ); 
+
                     router.push({ path : '/explore' }); 
                 }  
             })     
