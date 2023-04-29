@@ -1,7 +1,7 @@
 <script setup>
-    import LogOut from "@/components/NewPostForm.vue";
+    import NewPostForm from '../components/NewPostForm.vue';
 </script>
 
 <template>
-    <PostForm />
+    <NewPostForm />
 </template>

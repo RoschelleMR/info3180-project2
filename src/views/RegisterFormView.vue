@@ -1,5 +1,5 @@
 <script setup>
-    import LogOut from "@/components/RegisterForm.vue";
+    import RegisterForm from '../components/RegisterForm.vue';
 </script>
 
 <template>

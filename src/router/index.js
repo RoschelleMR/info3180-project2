@@ -28,6 +28,16 @@ const router = createRouter({
       component: () => import('../views/LogoutView.vue')
     },
     {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterFormView.vue')
+    },
+    {
+      path: '/newform',
+      name: 'newform',
+      component: () => import('../views/NewPostFormView.vue')
+    },
+    {
       path: '/user/:id',
       name: 'user',
       // route level code-splitting
