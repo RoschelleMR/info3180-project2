@@ -43,4 +43,9 @@
         margin: 10px;
         text-align: center;
     }
+
+    button {
+        color: blue;
+        border-radius: 20%;
+    }
 </style>
