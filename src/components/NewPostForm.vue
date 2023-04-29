@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent = "submitForm" id = "NewPostForm">
+    <form @submit.prevent = "createPost" id = "NewPostForm">
         <h1>New Post</h1>
         <div class = "photoCaption">
             <div class = "photo">
@@ -49,15 +49,14 @@
         .then(function (data) {
             console.log(data);
             fetchResponse.value = data
-        })
-        .catch(function (error) {
-            console.log(error);
-
-             if(data.hasOwnProperty('errors')) {
+            if(data.hasOwnProperty('errors')) {
                 fetchResponseType.value = "danger"
             } else {
                 fetchResponseType.value = "success"
             }
+        })
+        .catch(function (error) {
+            console.log(error);
         });
     }
 </script>
