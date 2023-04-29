@@ -12,7 +12,7 @@ from flask_wtf.csrf import generate_csrf
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
 from app.forms import PostForm, LoginForm
-from app.models import Post, Users
+from app.models import Post, Users, Likes
 import os, jwt
 from functools import wraps
 from datetime import datetime, timedelta
@@ -76,7 +76,7 @@ def generate_token():
     payload = {
         "sub": 1,
         "iat": timestamp,
-        "exp": timestamp + timedelta(minutes=15)
+        "exp": timestamp + timedelta(minutes=60)
     }
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
@@ -161,6 +161,26 @@ def getPoster(filename):
     return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), filename)
 
 
+@app.route('/api/v1/posts/<postID>like', methods = ['POST'])
+@login_required
+@requires_auth
+def like(postId):
+    response = ''
+    
+    user_id = current_user
+    post_id = post_id
+    
+    like= Likes(post_id, user_id)
+    
+    #  add like to database
+    
+    db.session.add(like)
+    db.session.commit()
+    
+    response = {'message': 'Successfully liked post'}
+
+    return response
+
 # Login route
 @app.route('/api/v1/auth/login', methods=['POST'])
 def login():
@@ -210,6 +230,7 @@ def login():
 
 @app.route("/api/v1/auth/logout", methods=['POST'])
 @requires_auth
+@login_required
 def logout():
     
     logout_user()
