@@ -114,6 +114,23 @@ def allPosts():
     data = {"posts": postLst}
     return jsonify(data)
 
+@app.route('/api/v1/users/<user_id>', methods=['GET'])
+def get_user(userId):
+    
+    response = ''
+    
+    if (userId == "current_user"):
+        
+        user = current_user
+        
+        response = {'message': user.id}
+        
+    else:
+        
+        response = {'Error': 'That user is not logged in'}
+        
+    return response
+
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
 def userPosts(user_id):
     posts = Post.query.filter_by(user_id=user_id).all()
