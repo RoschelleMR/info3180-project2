@@ -3,7 +3,7 @@
         <h1>Register</h1>
         <div class = "formInfo">
             <div class="form-group mb-3">
-                label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label">Username</label>
                 <input type="text" name="username" class="formcontrol" />
             </div>
 
