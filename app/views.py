@@ -96,6 +96,7 @@ def index():
     return jsonify(message="This is the beginning of our API")
 
 @app.route('/api/v1/posts', methods=['GET'])
+@login_required
 def allPosts():
     posts = Post.query.all()
     postLst = []
@@ -115,6 +116,7 @@ def allPosts():
     return jsonify(data)
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
+@login_required
 def userPosts(user_id):
     posts = Post.query.filter_by(user_id=user_id).all()
     postLst = []
@@ -132,6 +134,7 @@ def userPosts(user_id):
     return jsonify(data)
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['POST'])
+@login_required
 def addPost(user_id):
     form = PostForm()
 
@@ -154,6 +157,7 @@ def addPost(user_id):
             "errors": formErrors
         }
         return jsonify(errors)
+
 
 @app.route('/api/v1/photos/<filename>')
 def getPoster(filename):
