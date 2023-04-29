@@ -114,20 +114,21 @@ def allPosts():
     data = {"posts": postLst}
     return jsonify(data)
 
-@app.route('/api/v1/users/<user_id>', methods=['GET'])
-def get_user(userId):
+@app.route('/api/v1/currentuser', methods=['GET'])
+def get_user(currentuser):
     
     response = ''
     
-    if (userId == "current_user"):
+    if current_user is not None:
         
         user = current_user
-        
+    
         response = {'message': user.id}
         
     else:
         
         response = {'Error': 'That user is not logged in'}
+        
         
     return response
 
