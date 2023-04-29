@@ -95,6 +95,10 @@ def generate_token():
 def index():
     return jsonify(message="This is the beginning of our API")
 
+# @app.route('/Explore')
+# def explore():
+#     pass
+
 @app.route('/api/v1/posts', methods=['GET'])
 def allPosts():
     posts = Post.query.all()
