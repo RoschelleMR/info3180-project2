@@ -128,7 +128,7 @@ def get_user(currentuser):
         
     else:
         
-        response = {'Error': 'That user is not logged in'}
+        response = {'Error': 'User is not logged in'}
         
         
     return response

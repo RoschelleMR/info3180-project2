@@ -1,33 +1,42 @@
 <template>
-
-    <form @submit.prevent="loginUser" id='loginForm' class="row g-3"> 
-
-        <div v-if = "response_type == 'error'" class="alert alert-danger">
-            <ul>
-                <li v-for="error in response.errors">
-                    {{ error }}
-                </li>
-            </ul>
+    <div className="loginBox">
+        
+        <div className="Login header">
+            <h3>Login</h3>
+            <div v-if = "response_type == 'error'" class="alert alert-danger">
+                <ul>
+                    <li v-for="error in response.errors">
+                        {{ error }}
+                    </li>
+                </ul>
+            </div>
         </div>
 
-        <div class="col-12">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" name="username" class="formcontrol" />
-        </div>
+        <form @submit.prevent="loginUser" id='loginForm'> 
 
-        <div class="col-12">
-            <label for="password" class="form-label">Password</label>
-            <input type="text" name="password" class="formcontrol " />
-        </div>
+            
 
+            <div className="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" class="formcontrol" />
+            </div>
 
-        <div>
-            <!-- <input type="submit" value="Login"> -->
-            <input type="submit" value="Login"/>
-        </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="text" name="password" class="formcontrol " />
+            </div>
 
 
-    </form>
+            <div>
+                <!-- <input type="submit" value="Login"> -->
+                <input class="btn btn-primary" type="submit" value="Login"/>
+            </div>
+
+
+        </form>
+    </div>
+
+    
 
 </template>
 
@@ -98,3 +107,15 @@
 
 
 </script>
+
+<style>
+
+.loginBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+</style>
