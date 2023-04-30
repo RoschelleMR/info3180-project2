@@ -233,27 +233,27 @@ def register():
         }
         return jsonify(errors)
 
-# @app.route('/api/users/<user_id>/follow', method=['POST'])
-# @login_required
-# @requires_auth
-# def follow(user_id):
-#     if request.method == 'POST':
-#         response = request.get_json()
-#         target_id = response['target_id']
-#         target_user = Users.query.filter_by(target_id=target_id).all()
+@app.route('/api/users/<user_id>/follow', methods=['POST'])
+@login_required
+@requires_auth
+def follow(user_id):
+    if request.method == 'POST':
+        response = request.get_json()
+        target_id = response['target_id']
+        target_user = Users.query.filter_by(target_id=target_id).all()
 
-#         if target_id == user_id:
-#             return jsonify({'message': "You cannot follow your self"})
+        if target_id == user_id:
+            return jsonify({'message': "You cannot follow your self"})
 
-#         follow = Follow.query.filter_by(user_id=response['user_id'], target_id=response['target_id'])
-#         if follow != None:
-#             return jsonify({'message' : "You are already following this user"})
+        follow = Follow.query.filter_by(user_id=response['user_id'], target_id=response['target_id'])
+        if follow != None:
+            return jsonify({'message' : "You are already following this user"})
 
-#         follow = Follow(response['user_id'], response['target_id'])
-#         db.session.add(follow)
-#         db.session.commit()
+        follow = Follow(response['user_id'], response['target_id'])
+        db.session.add(follow)
+        db.session.commit()
 
-#         return jsonify({'message' : f'You are now following {target_user.username}'})
+        return jsonify({'message' : f'You are now following {target_user.username}'})
     
 
 # Login route
