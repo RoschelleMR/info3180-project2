@@ -116,11 +116,11 @@ def allPosts():
     return jsonify(data)
 
 @app.route('/api/v1/currentuser', methods=['GET'])
-def get_user(currentuser):
+def get_user():
     
     response = ''
     
-    if current_user is not None:
+    if current_user.is_authenticated:
         
         user = current_user
     
@@ -131,7 +131,7 @@ def get_user(currentuser):
         response = {'Error': 'User is not logged in'}
         
         
-    return response
+    return jsonify(response)
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
 @login_required
@@ -189,7 +189,7 @@ def getPoster(filename):
 def like(postId):
     response = ''
     
-    user_id = current_user
+    user_id = current_user.id
     post_id = post_id
     
     like= Likes(post_id, user_id)
