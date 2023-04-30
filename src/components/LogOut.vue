@@ -10,7 +10,7 @@
             </div>
 
             <div class="message-box">
-                <p>Are you sure you want to logout out?</p>
+                <p>Are you sure you want to logout?</p>
                 <button @click="logout" class="btn btn-primary">Logout</button>
             </div>
         </div>
