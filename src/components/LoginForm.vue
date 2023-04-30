@@ -102,7 +102,8 @@
 
                     localStorage.setItem('isLogin', 'true' ); 
 
-                    router.push({ path : '/explore' }); 
+                    router.push({ path : '/explore' })
+                        .then(() => { router.go() });
                 }  
             })     
             .catch(function (error) {         
