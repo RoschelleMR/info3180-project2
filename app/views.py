@@ -93,6 +93,7 @@ def index():
 
 @app.route('/api/v1/users/<user_id>', methods=['GET'])
 @login_required
+@requires_auth
 def getUserDetails(user_id):
     user = Users.query.filter_by(id=user_id).first()
     
@@ -111,6 +112,7 @@ def getUserDetails(user_id):
 
 @app.route('/api/v1/posts', methods=['GET'])
 @login_required
+@requires_auth
 def allPosts():
     posts = Post.query.all()
     postLst = []
@@ -142,6 +144,7 @@ def get_user():
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
 @login_required
+@requires_auth
 def userPosts(user_id):
     posts = Post.query.filter_by(user_id=user_id).all()
     postLst = []
@@ -160,6 +163,7 @@ def userPosts(user_id):
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['POST'])
 @login_required
+@requires_auth
 def addPost(user_id):
     form = PostForm()
 
