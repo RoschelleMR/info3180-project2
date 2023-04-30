@@ -1,40 +1,47 @@
 <template>
-    <div className="loginBox">
+
+    <div class="container">
         
-        <div className="Login header">
-            <h3>Login</h3>
-            <div v-if = "response_type == 'error'" class="alert alert-danger">
-                <ul>
-                    <li v-for="error in response.errors">
-                        {{ error }}
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <form @submit.prevent="loginUser" id='loginForm'> 
-
+        
             
 
-            <div className="form-group">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" name="username" class="formcontrol" />
+            <div class="form-box">
+                <div className="Login header">
+                    <h3>Login</h3>
+                    <div v-if = "response_type == 'error'" class="alert alert-danger">
+                        <ul>
+                            <li v-for="error in response.errors">
+                                {{ error }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <form @submit.prevent="loginUser" class="" id='loginForm'> 
+
+                    <div className="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" name="username" class="formcontrol" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="text" name="password" class="formcontrol " />
+                    </div>
+
+
+                    <div>
+                        <!-- <input type="submit" value="Login"> -->
+                        <input class="btn" type="submit" value="Login"/>
+                    </div>
+
+
+                    </form>
             </div>
-
-            <div class="form-group">
-                <label for="password" class="form-label">Password</label>
-                <input type="text" name="password" class="formcontrol " />
-            </div>
-
-
-            <div>
-                <!-- <input type="submit" value="Login"> -->
-                <input class="btn btn-primary" type="submit" value="Login"/>
-            </div>
-
-
-        </form>
+            
+        
     </div>
+
+    
 
     
 
@@ -110,12 +117,54 @@
 
 <style>
 
-.loginBox{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
-}
+    body{
+        background-color: antiquewhite;
+    }
+
+    .form-box{
+        max-width: 500px;
+        width: 100%;
+    }
+
+    #loginForm{
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+
+        
+
+        background-color: white;
+        padding: 50px;
+
+        box-shadow: 2px 2px 8px rgb(88, 88, 88);
+    }
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        /* flex-wrap: wrap; */
+        
+        padding: 50px;
+        
+        align-items: center;
+        
+    }
+
+    .form-group{
+        display: flex;
+        margin-bottom: 15px;
+        flex-direction: column;
+    }
+
+    .btn{
+        background-color: rgb(7, 202, 43);
+        color: white;
+
+        width: 100%;
+        margin-top: 10px;
+    }
+
+
 
 </style>
