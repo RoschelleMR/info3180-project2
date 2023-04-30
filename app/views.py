@@ -81,7 +81,7 @@ def generate_token():
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
 
-    return jsonify(token=token)
+    return token
 
 
 
@@ -124,7 +124,7 @@ def get_user():
         
         user = current_user
     
-        response = {'message': user.id}
+        response = {'message': user.get_id()}
         
     else:
         
@@ -204,7 +204,7 @@ def like(postId):
     return response
 
 ##Added by Shadean
-@app.route('/api/users/register',methods=["POST"])
+@app.route('/api/v1/register',methods=["POST"])
 def register():
     form = RegisterForm()
     if request.method == "POST" and form.validate_on_submit():
@@ -219,7 +219,7 @@ def register():
         filename = secure_filename(profile_photo.filename)
 
         user = Users(username, password, first_name, last_name, email, location, biography, filename)
-        profile_photo.save(os.path.join(app.config['UPLOAD FOLDER'], filename))
+        profile_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         db.session.add(user)
         db.session.commit()
 
@@ -233,27 +233,27 @@ def register():
         }
         return jsonify(errors)
 
-@app.route('/api/users/<user_id>/follow', method=['POST'])
-@login_required
-@requires_auth
-def follow(user_id):
-    if request.method == 'POST':
-        response = request.get_json()
-        target_id = response['target_id']
-        target_user = Users.query.filter_by(target_id=target_id).all()
+# @app.route('/api/users/<user_id>/follow', method=['POST'])
+# @login_required
+# @requires_auth
+# def follow(user_id):
+#     if request.method == 'POST':
+#         response = request.get_json()
+#         target_id = response['target_id']
+#         target_user = Users.query.filter_by(target_id=target_id).all()
 
-        if target_id == user_id:
-            return jsonify({'message': "You cannot follow your self"})
+#         if target_id == user_id:
+#             return jsonify({'message': "You cannot follow your self"})
 
-        follow = Follow.query.filter_by(user_id=response['user_id'], target_id=response['target_id'])
-        if follow != None:
-            return jsonify({'message' : "You are already following this user"})
+#         follow = Follow.query.filter_by(user_id=response['user_id'], target_id=response['target_id'])
+#         if follow != None:
+#             return jsonify({'message' : "You are already following this user"})
 
-        follow = Follow(response['user_id'], response['target_id'])
-        db.session.add(follow)
-        db.session.commit()
+#         follow = Follow(response['user_id'], response['target_id'])
+#         db.session.add(follow)
+#         db.session.commit()
 
-        return jsonify({'message' : f'You are now following {target_user.username}'})
+#         return jsonify({'message' : f'You are now following {target_user.username}'})
     
 
 # Login route
@@ -279,7 +279,7 @@ def login():
                 # Gets user id, load into session
                 login_user(user)
 
-                message = {generate_token()}
+                message = {'token': generate_token()}
                 
             else:
                 

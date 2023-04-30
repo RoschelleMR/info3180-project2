@@ -26,6 +26,9 @@
               <RouterLink class="nav-link" to="/myprofile">My Profile</RouterLink>
             </li>
             <li class="nav-item">
+              <RouterLink class="nav-link" to="/register">Register</RouterLink>
+            </li>
+            <li class="nav-item">
               <RouterLink v-if="isLoggedIn == 'false'" class="nav-link" to="/login">Login</RouterLink>
               <RouterLink v-else class="nav-link" to="/logout">Logout</RouterLink>
             </li>
@@ -39,7 +42,8 @@
 <script setup>
 
 import { RouterLink } from "vue-router";
-let isLoggedIn = localStorage.getItem('isLogin');
+
+  let isLoggedIn = localStorage.getItem('isLogin');
 
 </script>
 

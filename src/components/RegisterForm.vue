@@ -2,7 +2,20 @@
     <div class="container">
         <div class="form-box">
             <h3 class="header-text">Register</h3>
-            <form @submit.prevent = "submitForm" id = "NewPostForm">
+
+            <div v-if = "fetchResponseType == 'success'" class="alert alert-success">
+                {{ fetchResponse.message }}
+            </div>
+
+            <div v-if = "fetchResponseType == 'danger'" class="alert alert-danger">
+                <ul>
+                    <li v-for="error in fetchResponse.errors">
+                        {{ error }}
+                    </li>
+                </ul>
+            </div>
+
+            <form @submit.prevent = "register" id = "RegisterForm">
                 <div class = "formInfo">
                     <div class="form-group mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -71,8 +84,8 @@
     })
     function register(){
         let RegisterForm = document.querySelector("#RegisterForm")
-        let formData = new FormData(movieForm)
-        fetch("/api/v1/....", {
+        let formData = new FormData(RegisterForm)
+        fetch("/api/v1/register", {
             method: 'POST',
             body: formData,
             headers: {
@@ -99,63 +112,57 @@
 </script>
 
 <style>
-*{
-    -moz-box-sizing: border-box; 
-    -webkit-box-sizing: border-box; 
-    box-sizing: border-box; 
-}
-.header-text{
-    font-weight: bold;
-}
-.container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px;
-}
-.form-box{
-    max-width: 500px;
-    width: 100%;
-}
-form{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    background-color: white;
-    padding: 50px;
-    box-shadow: 2px 2px 8px rgb(88, 88, 88);
-}
-
-.form-group{
-    display: flex;
-    margin-bottom: 15px;
-    flex-direction: column;
-}
-
-.form-label{
-    font-weight: bold;
-}
-button{
-    background-color: rgb(7, 202, 43);
-    color: white;
-    font-weight: bold;
-
-    border: none;
-    border-radius: 5px;
-
-    width: 100%;
-    margin-top: 10px;
-    padding: 6px;
-}
-
-button:hover{
-    background-color: rgb(4, 220, 44);
-    color: white;
-    transition: all 0.8s;
-}
-
+    *{
+        -moz-box-sizing: border-box; 
+        -webkit-box-sizing: border-box; 
+        box-sizing: border-box; 
+    }
+    .header-text{
+        font-weight: bold;
+    }
+    .container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px;
+    }
+    .form-box{
+        max-width: 500px;
+        width: 100%;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: white;
+        padding: 50px;
+        box-shadow: 2px 2px 8px rgb(88, 88, 88);
+    }
+    .form-group{
+        display: flex;
+        margin-bottom: 15px;
+        flex-direction: column;
+    }
+    .form-label{
+        font-weight: bold;
+    }
+    button{
+        background-color: rgb(7, 202, 43);
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        margin-top: 10px;
+        padding: 6px;
+    }
+    button:hover{
+        background-color: rgb(4, 220, 44);
+        color: white;
+        transition: all 0.8s;
+    }
 </style>
+
 
 
     
