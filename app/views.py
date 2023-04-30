@@ -83,10 +83,6 @@ def generate_token():
 
     return token
 
-
-
-
-
 ###
 # Routing the application.
 ###
@@ -94,6 +90,24 @@ def generate_token():
 @app.route('/')
 def index():
     return jsonify(message="This is the beginning of our API")
+
+@app.route('/api/v1/users/<user_id>', methods=['GET'])
+@login_required
+def getUserDetails(user_id):
+    user = Users.query.filter_by(id=user_id).first()
+    
+    data = {
+        "id": user.id,
+        "username": user.username,
+        "firstname": user.first_name,
+        "lastname": user.last_name,
+        "email": user.email,
+        "location": user.location,
+        "biography": user.biography,
+        "profile_photo": "/api/v1/photos/{}".format(user.profile_photo),
+        "joined_on": user.joined_on
+    }
+    return jsonify(data)
 
 @app.route('/api/v1/posts', methods=['GET'])
 @login_required
@@ -116,21 +130,14 @@ def allPosts():
     return jsonify(data)
 
 @app.route('/api/v1/currentuser', methods=['GET'])
-def get_user():
-    
-    response = ''
-    
+def get_user():  
+    response = '' 
     if current_user.is_authenticated:
-        
         user = current_user
-    
-        response = {'message': user.get_id()}
-        
-    else:
-        
+        response = {'message': user.get_id()}      
+    else:    
         response = {'Error': 'User is not logged in'}
-        
-        
+
     return jsonify(response)
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
