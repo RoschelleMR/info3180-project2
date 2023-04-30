@@ -183,7 +183,7 @@ def getPoster(filename):
     return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), filename)
 
 
-@app.route('/api/v1/posts/<postID>like', methods = ['POST'])
+@app.route('/api/v1/posts/<postID>/like', methods = ['POST'])
 @login_required
 @requires_auth
 def like(postId):
