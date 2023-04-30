@@ -33,8 +33,7 @@
      
     let token = localStorage.getItem('token')
     
-    let test_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY4MjQyMjI1OSwiZXhwIjoxNjgyNDIzMTU5fQ.6K7KNYlr9T4GkNpY2SYJg1j4F9YOVNtXSWrsxiyPdo4"
-    console.log(test_token)
+    console.log(token)
 
     function getCsrfToken() {     
         fetch('/api/v1/csrf-token')       
@@ -45,15 +44,16 @@
         })   
     } 
 
-    function logout() {     
+    function logout() {  
         
-        localStorage.setItem('isLogin', false );
-
+        let auth = 'Bearer '+ token
+        console.log(auth)
+     
         fetch("/api/v1/auth/logout", {     
             method: 'POST',
             headers: {             
                 'X-CSRFToken': csrf_token.value,
-                'Authorization': "Bearer " + token     
+                'Authorization': auth     
                 }  
             })    
         .then((response) => 
@@ -63,6 +63,7 @@
             console.log(data); 
             if (data.hasOwnProperty('success')){
               logoutStatus.value = "success";  
+              localStorage.setItem('isLogin', 'false');
             }        
                 
         })   

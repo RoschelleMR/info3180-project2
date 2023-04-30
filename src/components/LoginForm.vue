@@ -98,9 +98,9 @@
                 }   
                 else{
                     response_type.value = 'success';
-                    localStorage.setItem('token', JSON.stringify(data.token)); 
+                    localStorage.setItem('token', data.token); 
 
-                    localStorage.setItem('isLogin', true ); 
+                    localStorage.setItem('isLogin', 'true' ); 
 
                     router.push({ path : '/explore' }); 
                 }  
