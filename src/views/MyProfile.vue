@@ -12,6 +12,9 @@
     let posts = ref([])
     let followers = ref()
 
+    let token = localStorage.getItem('token')
+    let auth = 'Bearer ' + token
+
     async function fetchLoggedInUser(){
         try {
             const response = await fetch(`/api/v1/currentuser`);
@@ -65,7 +68,12 @@
 
     async function fetchFollowers() {
         try {
-            const response = await fetch(`/api/v1/users/${id}/follow`);
+            const response = await fetch(`/api/v1/users/${id.value}/follow`, 
+            {   method: 'GET', 
+                headers:{
+                    'Authorization': auth,
+                }
+            });
             if (response.ok) {
                 const data = await response.json();
                 followers.value = data["followers"];
