@@ -1,15 +1,22 @@
 <template>
 
-    <div v-if = "logoutStatus == 'success'" class="alert alert-success">
-      <p>Successfully Logged Out</p>
-    </div>
+    <div class="container">
+        <div className="logout-box">
+            <div className="logout-header">
+                <h3>Logout</h3>
+                <div v-if = "logoutStatus == 'success'" class="alert alert-success">
+                    <p>Successfully Logged Out</p>
+                </div>
+            </div>
 
-    <div class="card">
-        <h3>
-            Are you sure you want to logout out?
-        </h3>
-        <button @click="logout" class="button">Logout</button>
+            <div class="message-box">
+                <p>Are you sure you want to logout out?</p>
+                <button @click="logout" class="btn btn-primary">Logout</button>
+            </div>
+        </div>
+        
     </div>
+    
     
 </template>
 
@@ -65,5 +72,44 @@
 </script>
 
 <style>
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        /* flex-wrap: wrap; */
+        
+        padding: 50px;
+        
+        align-items: center;
+        
+    }
+
+    .logout-box{
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .message-box{
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        text-align: center;
+
+        
+
+        background-color: white;
+        padding: 50px;
+
+        box-shadow: 2px 2px 8px rgb(88, 88, 88);
+    }
+
+    .logout-header{
+        margin-bottom: 15px;
+    }
+
+    h3, .message-box p{
+        font-weight: bold;
+    }
 
 </style>
