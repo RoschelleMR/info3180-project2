@@ -78,7 +78,8 @@
     onMounted(() => {
         fetchLoggedInUser()
         if(id.value == ''){
-            router.push({path : '/explore'})
+            console.log("Checked user")
+            router.push({path : '/login'})
         }
         // fetchUserDetails()
         // fetchFollowers()
