@@ -116,10 +116,6 @@
 
 <style>
 
-    body{
-        background-color: antiquewhite;
-    }
-
     .form-box{
         max-width: 500px;
         width: 100%;

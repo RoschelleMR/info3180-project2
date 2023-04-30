@@ -1,11 +1,12 @@
 <script setup>
 
     import { ref, onMounted } from "vue";
-    import { useRoute } from "vue-router";
+    import { useRoute, useRouter } from "vue-router";
     import UserProfileHeader from '../components/UserProfileHeader.vue';
     import UserPhotos from '../components/UserPhotos.vue';
 
     let route = useRoute();
+    let router = useRouter();
     let id = ref('')
     let userDetails = ref({})
     let posts = ref([])
