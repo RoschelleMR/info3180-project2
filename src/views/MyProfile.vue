@@ -12,78 +12,82 @@
     let posts = ref([])
     let followers = ref()
 
-    function fetchLoggedInUser(){
-        fetch(`/api/v1/currentuser`)
-        .then(response => {
-            if(response.ok){return response.json()}
-            else{return Promise.reject('Something was wrong with fetch request!')}
-        })
-        .then(data => {
-            console.log(data)
-            if(data.hasOwnProperty('message')) {
-                id.value = data["message"]
+    async function fetchLoggedInUser(){
+        try {
+            const response = await fetch(`/api/v1/currentuser`);
+            if(response.ok) {
+                const data = await response.json();
+                console.log(data);
+                if(data.hasOwnProperty('message')) {
+                    console.log(`User: ${data["message"]}`);
+                    id.value = data["message"];
+                }
+                if(id.value === ''){
+                    console.log(`User: ${id.value}`);
+                    router.push({path : '/login'});
+                }
+            } else {
+                return Promise.reject('Something was wrong with fetch request!');
             }
-            if(id.value == ''){
-                console.log(`User: ${id.value}`)
-                router.push({path : '/login'})
-            }
-        })
-        .catch(error => {
+        } catch (error) {
             console.log(error);
-        })
-    }
-
-    function fetchPosts(){
-        fetch(`/api/v1/users/${id.value}/posts`)
-        .then(response => {
-            if(response.ok){return response.json()}
-            else{return Promise.reject('Something was wrong with fetch request!')}
-        })
-        .then(data => {
-            posts.value = data["posts"]
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        }
     }
     
-    // function fetchUserDetails(){
-    //     fetch(`api/v1/users/${id}`)
-    //     .then(response => {
-    //         if(response.ok){return response.json()}
-    //         else{return Promise.reject('Something was wrong with fetch request!')}
-    //     })
-    //     .then(data => {
-    //         userDetails.value = data
-    //     })
-    //     .catch(error => {
-    //         console.log(error);
-    //     })
-    // }
+    async function fetchPosts(){
+        console.log(`Fetching Posts for User ${id.value}`);
+        try {
+            const response = await fetch(`/api/v1/users/${id.value}/posts`);
+            if(response.ok) {
+                const data = await response.json();
+                posts.value = data["posts"];
+            } else {
+                return Promise.reject('Something was wrong with fetch request!');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-    // function fetchFollowers(){
-    //     fetch(`/api/v1/users/${id}/follow`)
-    //     .then(response => {
-    //         if(response.ok){return response.json()}
-    //         else{return Promise.reject('Something was wrong with fetch request!')}
-    //     })
-    //     .then(data => {
-    //         followers.value = data["followers"]
-    //     })
-    //     .catch(error => {
-    //         console.log(error);
-    //     })
-    // }
+    async function fetchUserDetails() {
+        try {
+            const response = await fetch(`api/v1/users/${id}`);
+            if (response.ok) {
+                const data = await response.json();
+                userDetails.value = data;
+            } else {
+                return Promise.reject('Something was wrong with fetch request!');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function fetchFollowers() {
+        try {
+            const response = await fetch(`/api/v1/users/${id}/follow`);
+            if (response.ok) {
+                const data = await response.json();
+                followers.value = data["followers"];
+            } else {
+                return Promise.reject('Something was wrong with fetch request!');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
 
     function hasUserDetails() {
         return userDetails.hasOwnProperty("username"); //Checks if data is set in userDetails
     }
 
-    onMounted(() => {
-        fetchLoggedInUser()
-        // fetchUserDetails()
-        // fetchFollowers()
-        fetchPosts()
+    onMounted(async () => {
+        await fetchLoggedInUser()
+        // await fetchUserDetails()
+        // await fetchFollowers()
+        await fetchPosts()
     })
 
     //DISPLAY MESSAGE IF THE USER DOESN'T EXIST
