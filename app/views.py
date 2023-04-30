@@ -244,6 +244,19 @@ def register():
         }
         return jsonify(errors)
 
+@app.route('/api/users/<user_id>/follow', methods=['GET'])
+@login_required
+@requires_auth
+def getFollowers(user_id):
+    followers = Follow.query.filter_by(target_id=user_id).all()
+    followersLst = []
+
+    for follow in followers:
+        followersLst.append(follow.user_id)
+    
+    data = {"followers": followersLst}
+    return jsonify(data)
+    
 @app.route('/api/users/<user_id>/follow', methods=['POST'])
 @login_required
 @requires_auth

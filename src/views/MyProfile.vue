@@ -86,7 +86,7 @@
     onMounted(async () => {
         await fetchLoggedInUser()
         await fetchUserDetails()
-        // await fetchFollowers()
+        await fetchFollowers()
         await fetchPosts()
     })
 
