@@ -27,6 +27,9 @@
         getCsrfToken();   
     }); 
 
+    import {useRouter} from "vue-router";
+    const router = useRouter()
+
     let logoutStatus = ref("");  
     let csrf_token = ref("");
 
@@ -64,6 +67,10 @@
             if (data.hasOwnProperty('success')){
               logoutStatus.value = "success";  
               localStorage.setItem('isLogin', 'false');
+
+              setTimeout( () => router.push({ path: '/'})
+              .then(() => { router.go() }), 1000)
+
             }        
                 
         })   
