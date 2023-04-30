@@ -23,6 +23,10 @@
             if(data.hasOwnProperty('message')) {
                 id.value = data["message"]
             }
+            if(id.value == ''){
+                console.log(`User: ${id.value}`)
+                router.push({path : '/login'})
+            }
         })
         .catch(error => {
             console.log(error);
@@ -77,10 +81,6 @@
 
     onMounted(() => {
         fetchLoggedInUser()
-        if(id.value == ''){
-            console.log("Checked user")
-            router.push({path : '/login'})
-        }
         // fetchUserDetails()
         // fetchFollowers()
         fetchPosts()
