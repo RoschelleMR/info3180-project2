@@ -11,8 +11,8 @@ from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
-from app.forms import PostForm, LoginForm
-from app.models import Post, Users, Likes
+from app.forms import PostForm, LoginForm, RegisterForm
+from app.models import Post, Users, Likes, Follow
 import os, jwt
 from functools import wraps
 from datetime import datetime, timedelta
@@ -202,6 +202,59 @@ def like(postId):
     response = {'message': 'Successfully liked post'}
 
     return response
+
+##Added by Shadean
+@app.route('/api/users/register',methods=["POST"])
+def register():
+    form = RegisterForm()
+    if request.method == "POST" and form.validate_on_submit():
+        username =form.username.data
+        password = form.password.data
+        first_name = form.firstName.data
+        last_name = form.lastName.data
+        email = form.email.data
+        location = form.location.data
+        biography = form.biography.data
+        profile_photo = form.photo.data
+        filename = secure_filename(profile_photo.filename)
+
+        user = Users(username, password, first_name, last_name, email, location, biography, filename)
+        profile_photo.save(os.path.join(app.config['UPLOAD FOLDER'], filename))
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify({'message': f"Account was successfully created for {username}!!"})
+    
+    else:
+        db.session.rollback()
+        formErrors = form_errors(form)
+        errors = {
+            "errors": formErrors
+        }
+        return jsonify(errors)
+
+@app.route('/api/users/<user_id>/follow', method=['POST'])
+@login_required
+@requires_auth
+def follow(user_id):
+    if request.method == 'POST':
+        response = request.get_json()
+        target_id = response['target_id']
+        target_user = Users.query.filter_by(target_id=target_id).all()
+
+        if target_id == user_id:
+            return jsonify({'message': "You cannot follow your self"})
+
+        follow = Follow.query.filter_by(user_id=response['user_id'], target_id=response['target_id'])
+        if follow != None:
+            return jsonify({'message' : "You are already following this user"})
+
+        follow = Follow(response['user_id'], response['target_id'])
+        db.session.add(follow)
+        db.session.commit()
+
+        return jsonify({'message' : f'You are now following {target_user.username}'})
+    
 
 # Login route
 @app.route('/api/v1/auth/login', methods=['POST'])
