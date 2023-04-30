@@ -51,7 +51,7 @@
 
     async function fetchUserDetails() {
         try {
-            const response = await fetch(`api/v1/users/${id}`);
+            const response = await fetch(`/api/v1/users/${id.value}`);
             if (response.ok) {
                 const data = await response.json();
                 userDetails.value = data;
@@ -85,7 +85,7 @@
 
     onMounted(async () => {
         await fetchLoggedInUser()
-        // await fetchUserDetails()
+        await fetchUserDetails()
         // await fetchFollowers()
         await fetchPosts()
     })
@@ -94,7 +94,7 @@
 </script>
 
 <template>
-    <!-- <UserProfileHeader v-if="hasUserDetails" :userDetails="userDetails" :followers="followers"/> -->
+    <UserProfileHeader v-if="hasUserDetails" :userDetails="userDetails" :followers="followers" :posts="posts"/>
     <UserPhotos v-if="posts" :posts="posts"/>
 </template>
 

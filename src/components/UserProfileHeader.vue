@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps } from 'vue';
-const props = defineProps(['userDetails', 'followers'])
+const props = defineProps(['userDetails', 'followers', 'posts'])
 
 </script>
 
@@ -21,7 +21,7 @@ const props = defineProps(['userDetails', 'followers'])
             <div class="stats container">
                 <div class="row">
                     <div class="col-6">
-                        <h3 class="stat">{{ userDetails.posts.length }}</h3>
+                        <h3 class="stat">{{ posts.length }}</h3>
                         <h4 class="stat-name">Posts</h4> 
                     </div>
                     <div class="col-6">
