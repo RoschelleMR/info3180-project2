@@ -93,7 +93,7 @@ def index():
 
 @app.route('/api/v1/users/<user_id>', methods=['GET'])
 @login_required
-@requires_auth
+#@requires_auth
 def getUserDetails(user_id):
     user = Users.query.filter_by(id=user_id).first()
     
@@ -244,7 +244,7 @@ def register():
         }
         return jsonify(errors)
 
-@app.route('/api/users/<user_id>/follow', methods=['GET'])
+@app.route('/api/v1/users/<user_id>/follow', methods=['GET'])
 @login_required
 @requires_auth
 def getFollowers(user_id):
@@ -257,7 +257,7 @@ def getFollowers(user_id):
     data = {"followers": followersLst}
     return jsonify(data)
     
-@app.route('/api/users/<user_id>/follow', methods=['POST'])
+@app.route('/api/v1/users/<user_id>/follow', methods=['POST'])
 @login_required
 @requires_auth
 def follow(user_id):
