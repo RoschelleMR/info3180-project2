@@ -6,7 +6,7 @@
             
 
             <div class="form-box">
-                <div className="Login header">
+                <div className="login-header">
                     <h3>Login</h3>
                     <div v-if = "response_type == 'error'" class="alert alert-danger">
                         <ul>
@@ -19,7 +19,7 @@
                 <form @submit.prevent="loginUser" class="" id='loginForm'> 
 
                     <div className="form-group">
-                        <label for="username" class="form-label">Username</label>
+                        <label for="username" class="form-label bold">Username</label>
                         <input type="text" name="username" class="formcontrol" />
                     </div>
 
@@ -30,8 +30,7 @@
 
 
                     <div>
-                        <!-- <input type="submit" value="Login"> -->
-                        <input class="btn" type="submit" value="Login"/>
+                        <input class="button" type="submit" value="Login"/>
                     </div>
 
 
@@ -157,12 +156,35 @@
         flex-direction: column;
     }
 
-    .btn{
+    .form-label{
+        font-weight: bold;
+    }
+
+    .formcontrol{
+        padding: 5px;
+    }
+
+    .button{
         background-color: rgb(7, 202, 43);
         color: white;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 10px;
 
         width: 100%;
         margin-top: 10px;
+        padding: 6px;
+    }
+
+    .button:hover{
+        background-color: rgb(4, 220, 44);
+        color: white;
+        transition: all 0.8s;
+    }
+
+    .login-header h3{
+        font-weight: bold;
     }
 
 
