@@ -28,6 +28,11 @@ const router = createRouter({
       component: () => import('../views/LogoutView.vue')
     },
     {
+      path: '/explore',
+      name: 'explore',
+      component: () => import('../views/ExploreView.vue')
+    },
+    {
       path: '/user/:id',
       name: 'user',
       // route level code-splitting
