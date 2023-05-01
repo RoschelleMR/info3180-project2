@@ -1,6 +1,8 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import { defineProps } from 'vue';
-const props = defineProps(['userDetails', 'followers', 'posts', 'canFollow'])
+
+const props = defineProps(['userDetails', 'followers', 'posts', 'canFollow', 'follow', 'isFollowed'])
 
 </script>
 
@@ -30,7 +32,8 @@ const props = defineProps(['userDetails', 'followers', 'posts', 'canFollow'])
                     </div>
                 </div>
                 <div class="controls mx-auto col-lg-10 col-md-5 col-5">
-                    <button v-if="canFollow" class="follow-btn btn bg-primary text-light">Follow</button> <!--DO NOT DISPLAY IF YOU ARE THIS USER-->
+                    <button v-if="canFollow && !isFollowed" @click="follow" class="follow-btn btn bg-primary text-light">Follow</button>
+                    <button v-if="canFollow && isFollowed" class="follow-btn btn bg-success text-light">Following</button>
                 </div>
             </div>
             

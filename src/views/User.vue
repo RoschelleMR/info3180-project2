@@ -12,12 +12,23 @@
     let userDetails = ref({})
     let posts = ref([])
     let followers = ref([])
+    let isFollowed = ref()
 
     id.value = route.params.id
 
+    let csrf_token = ref("")
     let token = localStorage.getItem('token')
     let auth = 'Bearer ' + token
-    
+
+    function getCsrfToken() {
+        fetch('/api/v1/csrf-token')
+        .then((response) => response.json())
+        .then((data) => {
+        console.log(data);
+        csrf_token.value = data.csrf_token;
+        })
+    }
+
     async function fetchLoggedInUser(){
         try {
             const response = await fetch(`/api/v1/currentuser`);
@@ -86,8 +97,17 @@
             if (response.ok) {
                 const data = await response.json();
                 followers.value = data["followers"];
+
+                if(followers.value.includes(loggedUser.value)){
+                    isFollowed.value = true
+                }
+                else{
+                    isFollowed.value = false
+                }
+
                 console.log('Followers:')
                 console.log(data)
+
             } else {
                 return Promise.reject('Something was wrong with fetch request!');
             }
@@ -96,11 +116,37 @@
         }
     }
 
+    function follow() {
+        let formData = new FormData()
+        formData.append('target_id', id)
+        formData.append('user_id', loggedUser.id)
+
+        fetch(`/api/v1/users/${userDetails.value.id}/follow`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrf_token.value
+            }
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data);
+            isFollowed.value = true
+            followers.value.push(loggedUser)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
     function hasUserDetails() {
         return userDetails.hasOwnProperty("username"); //Checks if data is set in userDetails
     }
 
     onMounted(async () => {
+        await getCsrfToken()
         await fetchLoggedInUser()
         await fetchUserDetails()
         await fetchFollowers()
@@ -110,7 +156,15 @@
 </script>
 
 <template>
-    <UserProfileHeader v-if="hasUserDetails" :userDetails="userDetails" :followers="followers" :posts="posts" :canFollow="true"/>
+    <UserProfileHeader 
+        v-if="hasUserDetails" 
+        :userDetails="userDetails" 
+        :followers="followers" 
+        :follow="follow" 
+        :posts="posts" 
+        :canFollow="true" 
+        :isFollowed="isFollowed"
+    />
     <UserPhotos v-if="posts" :posts="posts"/>
 </template>
 
