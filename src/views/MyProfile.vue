@@ -10,10 +10,20 @@
     let id = ref('')
     let userDetails = ref({})
     let posts = ref([])
-    let followers = ref()
+    let followers = ref([])
 
+    let csrf_token = ref("")
     let token = localStorage.getItem('token')
     let auth = 'Bearer ' + token
+
+    function getCsrfToken() {
+        fetch('/api/v1/csrf-token')
+        .then((response) => response.json())
+        .then((data) => {
+        console.log(data);
+        csrf_token.value = data.csrf_token;
+        })
+    }
 
     async function fetchLoggedInUser(){
         try {
@@ -77,6 +87,8 @@
             if (response.ok) {
                 const data = await response.json();
                 followers.value = data["followers"];
+                console.log('Followers:')
+                console.log(data)
             } else {
                 return Promise.reject('Something was wrong with fetch request!');
             }
@@ -85,7 +97,28 @@
         }
     }
 
+    function follow() {
+        let formData = new FormData()
+        formData.append('target_id', id)
+        formData.append('user_id', loggedUser.id)
 
+        fetch(`/api/v1/users/${userDetails.id}/follow`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrf_token.value
+            }
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
 
     function hasUserDetails() {
         return userDetails.hasOwnProperty("username"); //Checks if data is set in userDetails
@@ -98,11 +131,18 @@
         await fetchPosts()
     })
 
-    //DISPLAY MESSAGE IF THE USER DOESN'T EXIST
 </script>
 
 <template>
-    <UserProfileHeader v-if="hasUserDetails" :userDetails="userDetails" :followers="followers" :posts="posts"/>
+    <UserProfileHeader 
+        v-if="hasUserDetails" 
+        :userDetails="userDetails" 
+        :followers="followers" 
+        :follow="follow" 
+        :posts="posts" 
+        :canFollow="false" 
+        :isFollowed="false"
+    />
     <UserPhotos v-if="posts" :posts="posts"/>
 </template>
 
