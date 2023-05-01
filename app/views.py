@@ -11,8 +11,8 @@ from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
-from app.forms import PostForm, LoginForm
-from app.models import Post, Users
+from app.forms import PostForm, LoginForm, RegisterForm
+from app.models import Post, Users, Likes, Follow
 import os, jwt
 from functools import wraps
 from datetime import datetime, timedelta
@@ -76,16 +76,12 @@ def generate_token():
     payload = {
         "sub": 1,
         "iat": timestamp,
-        "exp": timestamp + timedelta(minutes=15)
+        "exp": timestamp + timedelta(minutes=60)
     }
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
 
-    return jsonify(token=token)
-
-
-
-
+    return token
 
 ###
 # Routing the application.
@@ -95,11 +91,34 @@ def generate_token():
 def index():
     return jsonify(message="This is the beginning of our API")
 
+<<<<<<< HEAD
 # @app.route('/Explore')
 # def explore():
 #     pass
+=======
+@app.route('/api/v1/users/<user_id>', methods=['GET'])
+@login_required
+#@requires_auth
+def getUserDetails(user_id):
+    user = Users.query.filter_by(id=user_id).first()
+    
+    data = {
+        "id": user.id,
+        "username": user.username,
+        "firstname": user.first_name,
+        "lastname": user.last_name,
+        "email": user.email,
+        "location": user.location,
+        "biography": user.biography,
+        "profile_photo": "/api/v1/photos/{}".format(user.profile_photo),
+        "joined_on": user.joined_on
+    }
+    return jsonify(data)
+>>>>>>> f674269c04260b7e1d7fdb79553bde3c4ab9cfa7
 
 @app.route('/api/v1/posts', methods=['GET'])
+@login_required
+@requires_auth
 def allPosts():
     posts = Post.query.all()
     postLst = []
@@ -118,7 +137,20 @@ def allPosts():
     data = {"posts": postLst}
     return jsonify(data)
 
+@app.route('/api/v1/currentuser', methods=['GET'])
+def get_user():  
+    response = '' 
+    if current_user.is_authenticated:
+        user = current_user
+        response = {'message': user.get_id()}      
+    else:    
+        response = {'Error': 'User is not logged in'}
+
+    return jsonify(response)
+
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
+@login_required
+@requires_auth
 def userPosts(user_id):
     posts = Post.query.filter_by(user_id=user_id).all()
     postLst = []
@@ -136,6 +168,8 @@ def userPosts(user_id):
     return jsonify(data)
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['POST'])
+@login_required
+@requires_auth
 def addPost(user_id):
     form = PostForm()
 
@@ -159,11 +193,106 @@ def addPost(user_id):
         }
         return jsonify(errors)
 
+
 @app.route('/api/v1/photos/<filename>')
 def getPoster(filename):
     root_dir = os.getcwd()
     return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), filename)
 
+
+@app.route('/api/v1/posts/<postID>/like', methods = ['POST'])
+@login_required
+@requires_auth
+def like(postID):
+    response = ''
+    
+    user_id = current_user.id
+    post_id = postID
+    
+    like= Likes(post_id, user_id)
+    
+    #  add like to database
+    
+    db.session.add(like)
+    db.session.commit()
+    
+    response = {'message': 'Successfully liked post'}
+
+    return response
+
+##Added by Shadean
+@app.route('/api/v1/register',methods=["POST"])
+def register():
+    form = RegisterForm()
+    if request.method == "POST" and form.validate_on_submit():
+        username =form.username.data
+        password = form.password.data
+        first_name = form.firstName.data
+        last_name = form.lastName.data
+        email = form.email.data
+        location = form.location.data
+        biography = form.biography.data
+        profile_photo = form.photo.data
+        filename = secure_filename(profile_photo.filename)
+
+        user = Users(username, password, first_name, last_name, email, location, biography, filename)
+        profile_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify({'message': f"Account was successfully created for {username}!!"})
+    
+    else:
+        db.session.rollback()
+        formErrors = form_errors(form)
+        errors = {
+            "errors": formErrors
+        }
+        return jsonify(errors)
+
+@app.route('/api/v1/users/<user_id>/follow', methods=['GET'])
+@login_required
+@requires_auth
+def getFollowers(user_id):
+    
+    if request.method == 'GET':
+        
+        # count = 0
+    
+        followers = Follow.query.filter_by(target_id=user_id).all()
+        followersLst = []
+
+        for follow in followers:
+            # count += 1
+            followersLst.append(follow.user_id)
+            
+        
+        
+        data = {"followers": followersLst}
+        return jsonify(data)
+    
+@app.route('/api/v1/users/<user_id>/follow', methods=['POST'])
+@login_required
+@requires_auth
+def follow(user_id):
+    if request.method == 'POST':
+        response = request.get_json()
+        target_id = response['target_id']
+        target_user = Users.query.filter_by(target_id=target_id).all()
+
+        if target_id == user_id:
+            return jsonify({'message': "You cannot follow your self"})
+
+        follow = Follow.query.filter_by(user_id=response['user_id'], target_id=response['target_id'])
+        if follow != None:
+            return jsonify({'message' : "You are already following this user"})
+
+        follow = Follow(response['user_id'], response['target_id'])
+        db.session.add(follow)
+        db.session.commit()
+
+        return jsonify({'message' : f'You are now following {target_user.username}'})
+    
 
 # Login route
 @app.route('/api/v1/auth/login', methods=['POST'])
@@ -188,7 +317,7 @@ def login():
                 # Gets user id, load into session
                 login_user(user)
 
-                message = {generate_token()}
+                message = {'token': generate_token()}
                 
             else:
                 
@@ -214,6 +343,7 @@ def login():
 
 @app.route("/api/v1/auth/logout", methods=['POST'])
 @requires_auth
+@login_required
 def logout():
     
     logout_user()

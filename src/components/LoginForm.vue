@@ -1,33 +1,48 @@
 <template>
 
-    <form @submit.prevent="loginUser" id='loginForm' class="row g-3"> 
+    <div class="container">
+        
+        
+            
 
-        <div v-if = "response_type == 'error'" class="alert alert-danger">
-            <ul>
-                <li v-for="error in response.errors">
-                    {{ error }}
-                </li>
-            </ul>
-        </div>
+            <div class="form-box">
+                <div className="login-header">
+                    <h3>Login</h3>
+                    <div v-if = "response_type == 'error'" class="alert alert-danger">
+                        <ul>
+                            <li v-for="error in response.errors">
+                                {{ error }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <form @submit.prevent="loginUser" class="" id='loginForm'> 
 
-        <div class="col-12">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" name="username" class="formcontrol" />
-        </div>
+                    <div className="form-group">
+                        <label for="username" class="form-label bold">Username</label>
+                        <input type="text" name="username" class="formcontrol" />
+                    </div>
 
-        <div class="col-12">
-            <label for="password" class="form-label">Password</label>
-            <input type="text" name="password" class="formcontrol " />
-        </div>
-
-
-        <div>
-            <!-- <input type="submit" value="Login"> -->
-            <input type="submit" value="Login"/>
-        </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="text" name="password" class="formcontrol " />
+                    </div>
 
 
-    </form>
+                    <div>
+                        <input class="button" type="submit" value="Login"/>
+                    </div>
+
+
+                    </form>
+            </div>
+            
+        
+    </div>
+
+    
+
+    
 
 </template>
 
@@ -83,11 +98,12 @@
                 }   
                 else{
                     response_type.value = 'success';
-                    localStorage.setItem('token', JSON.stringify(data.token)); 
+                    localStorage.setItem('token', data.token); 
 
-                    localStorage.setItem('isLogin', true ); 
+                    localStorage.setItem('isLogin', 'true' ); 
 
-                    router.push({ path : '/explore' }); 
+                    router.push({ path : '/explore' })
+                        .then(() => { router.go() });
                 }  
             })     
             .catch(function (error) {         
@@ -98,3 +114,76 @@
 
 
 </script>
+
+<style>
+
+    .form-box{
+        max-width: 500px;
+        width: 100%;
+    }
+
+    #loginForm{
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+
+        
+
+        background-color: white;
+        padding: 50px;
+
+        box-shadow: 2px 2px 8px rgb(88, 88, 88);
+    }
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        /* flex-wrap: wrap; */
+        
+        padding: 50px;
+        
+        align-items: center;
+        
+    }
+
+    .form-group{
+        display: flex;
+        margin-bottom: 15px;
+        flex-direction: column;
+    }
+
+    .form-label{
+        font-weight: bold;
+    }
+
+    .formcontrol{
+        padding: 5px;
+    }
+
+    .button{
+        background-color: rgb(7, 202, 43);
+        color: white;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 10px;
+
+        width: 100%;
+        margin-top: 10px;
+        padding: 6px;
+    }
+
+    .button:hover{
+        background-color: rgb(4, 220, 44);
+        color: white;
+        transition: all 0.8s;
+    }
+
+    .login-header h3{
+        font-weight: bold;
+    }
+
+
+
+</style>
