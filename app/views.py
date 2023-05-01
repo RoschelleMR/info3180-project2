@@ -118,14 +118,14 @@ def allPosts():
     postLst = []
 
     for post in posts:
-        #likes = Likes.query.filter_by(post_id=post.id).all() #Waiting to be implemented
+        likes = Likes.query.filter_by(post_id=post.id).all()
         postLst.append({
             "id": post.id,
             "user_id": post.user_id,
             "photo": "/api/v1/photos/{}".format(post.photo),
             "caption": post.caption,
-            "created_on": post.created_on
-            #"likes": likes
+            "created_on": post.created_on,
+            "likes": likes
         })
     
     data = {"posts": postLst}
