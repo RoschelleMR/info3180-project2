@@ -76,7 +76,7 @@ def generate_token():
     payload = {
         "sub": 1,
         "iat": timestamp,
-        "exp": timestamp + timedelta(minutes=60)
+        "exp": timestamp + timedelta(hours=24)
     }
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
