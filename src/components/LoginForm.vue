@@ -58,7 +58,7 @@
     let response = ref([]);
     let response_type = ref("");
     
-    localStorage.setItem('isLogin', false ); 
+    localStorage.setItem('isLogin', 'false'); 
 
 
     function getCsrfToken() {     
