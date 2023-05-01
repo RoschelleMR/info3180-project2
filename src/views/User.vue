@@ -34,9 +34,7 @@
             const response = await fetch(`/api/v1/currentuser`);
             if(response.ok) {
                 const data = await response.json();
-                console.log(data);
                 if(data.hasOwnProperty('message')) {
-                    console.log(`User: ${data["message"]}`);
                     loggedUser.value = data["message"];
 
                     //If the user is trying to view their own page, then redirect to /myprofile route
@@ -98,15 +96,17 @@
                 const data = await response.json();
                 followers.value = data["followers"];
 
-                if(followers.value.includes(loggedUser.value)){
-                    isFollowed.value = true
-                }
-                else{
-                    isFollowed.value = false
-                }
-
-                console.log('Followers:')
-                console.log(data)
+                console.log("Followers")
+                console.log(followers.value)
+                console.log("Logged User")
+                console.log(loggedUser.value)
+                isFollowed.value = false
+                
+                followers.value.forEach(follow => {
+                    if(follow == loggedUser.value){
+                        isFollowed.value = true
+                    }
+                });
 
             } else {
                 return Promise.reject('Something was wrong with fetch request!');
@@ -119,7 +119,7 @@
     function follow() {
         let formData = new FormData()
         formData.append('target_id', id)
-        formData.append('user_id', loggedUser.id)
+        formData.append('user_id', loggedUser.value)
 
         fetch(`/api/v1/users/${userDetails.value.id}/follow`, {
             method: 'POST',
