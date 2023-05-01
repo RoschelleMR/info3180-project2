@@ -157,6 +157,6 @@ h3{
     font-weight: bold;
 }
 .footer .btn{
-    margin-right: 10px;
+    margin-right: 5px;
 }
 </style>
