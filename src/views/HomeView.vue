@@ -8,7 +8,7 @@ const router = useRouter()
 </script>
 
 <template>
-    <div class="container">
+    <div class="homecontainer">
 
       <div class="card">
         <img src="@/assets/home-img.jpg" alt=""/>
@@ -32,7 +32,7 @@ const router = useRouter()
 </template>
 
 <style>
-  .container{
+  .homecontainer{
     display: flex;
     column-gap: 8px;
     align-content: center;

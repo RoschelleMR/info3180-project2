@@ -35,8 +35,7 @@ const props = defineProps(['post'])
     object-fit:cover;
 }
 header{
-    display: flex;
-    padding: 5px 15px;
+    
 }
 h3{
     font-size: 20px;
