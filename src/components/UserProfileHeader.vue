@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps } from 'vue';
-const props = defineProps(['userDetails', 'followers', 'posts'])
+const props = defineProps(['userDetails', 'followers', 'posts', 'canFollow'])
 
 </script>
 
@@ -25,12 +25,12 @@ const props = defineProps(['userDetails', 'followers', 'posts'])
                         <h4 class="stat-name">Posts</h4> 
                     </div>
                     <div class="col-6">
-                        <h3 class="stat">{{ followers }}</h3>
+                        <h3 class="stat">{{ followers.length }}</h3>
                         <h4 class="stat-name">Followers</h4>
                     </div>
                 </div>
                 <div class="controls mx-auto col-lg-10 col-md-5 col-5">
-                    <button class="follow-btn btn bg-primary text-light">Follow</button> <!--DO NOT DISPLAY IF YOU ARE THIS USER-->
+                    <button v-if="canFollow" class="follow-btn btn bg-primary text-light">Follow</button> <!--DO NOT DISPLAY IF YOU ARE THIS USER-->
                 </div>
             </div>
             

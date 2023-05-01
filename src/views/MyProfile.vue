@@ -10,7 +10,7 @@
     let id = ref('')
     let userDetails = ref({})
     let posts = ref([])
-    let followers = ref()
+    let followers = ref([])
 
     let token = localStorage.getItem('token')
     let auth = 'Bearer ' + token
@@ -77,6 +77,8 @@
             if (response.ok) {
                 const data = await response.json();
                 followers.value = data["followers"];
+                console.log('Followers:')
+                console.log(data)
             } else {
                 return Promise.reject('Something was wrong with fetch request!');
             }
@@ -102,7 +104,7 @@
 </script>
 
 <template>
-    <UserProfileHeader v-if="hasUserDetails" :userDetails="userDetails" :followers="followers" :posts="posts"/>
+    <UserProfileHeader v-if="hasUserDetails" :userDetails="userDetails" :followers="followers" :posts="posts" :canFollow="false"/>
     <UserPhotos v-if="posts" :posts="posts"/>
 </template>
 
