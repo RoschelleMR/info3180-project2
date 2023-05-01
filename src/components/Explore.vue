@@ -1,7 +1,7 @@
 <template>
 
     <div class="exploreSidebar">
-        <button>New Post</button>
+        <button onclick="addPost()">New Post</button>
     </div>
 
     <div class="exploreMainBar">
@@ -55,6 +55,10 @@
 
     }
 
+    function addPost() {
+        // 
+    }
+
 
 
 </script>
@@ -72,8 +76,8 @@
     }
 
     button {
-        color: blue;
-        border-radius: 20%;
+        background-color: blue;
+        border-radius: 2%;
     }
 
 </style>

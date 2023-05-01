@@ -4,6 +4,12 @@ import { ref } from "vue";
 let message = ref("Photogram")
 let subtext = ref("Share photos of your favourite moments with friends, family and the world.")
 
+function register() {}
+
+function login() {
+  console.log("Click");
+}
+
 </script>
 
 <template>
@@ -15,8 +21,8 @@ let subtext = ref("Share photos of your favourite moments with friends, family a
         <!-- <img alt="Quote" class="quote" src="@/assets/Quote.jpg" width="170" height="200" /> -->
         <h1>{{ message }}</h1>
         <p>{{ subtext }}</p>
-        <button class="register">Register</button>
-        <button class="login">Login</button>
+        <button class="register" onclick="register()">Register</button>
+        <button class="login" onclick="login()">Login</button>
       </div>
     </div>
 </template>
@@ -30,7 +36,7 @@ let subtext = ref("Share photos of your favourite moments with friends, family a
   button {
     color: white;
     border: none;
-    border-radius: 5%;
+    border-radius: 2%;
     padding: 1%;
     padding-left: 2%;
     padding-right: 2%;
