@@ -1,21 +1,50 @@
 <script setup>
 import { ref, onMounted, defineProps } from 'vue';
+import { useRouter } from "vue-router";
 
 const props = defineProps(['post'])
+let router = useRouter();
+let user = ref({
+    'username': '',
+    'profile_photo': ''
+})
 
+async function fetchUserDetails(userid) {
+    try {
+        const response = await fetch(`/api/v1/users/${userid}`);
+        if (response.ok) {
+            const data = await response.json();
+            user.value = data
+            console.log(data)
+        } else {
+            return Promise.reject('Something was wrong with fetch request!');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function redirectToProfile(){
+    router.push({path : `/user/${props.post.user_id}`});
+}
+
+onMounted(async () => {
+    await fetchUserDetails(props.post.user_id)
+})
 
 </script>
 
 <template>
 <div class="post">
-    <header>
-        <img src="#" alt="Profile Photo of " id="pfp">
-        <h3>Username</h3>
+    <header class="post-header">
+        <img @click="redirectToProfile" :src="user.profile_photo" :alt="`Profile Photo of ${user.username}`" id="pfp">
+
+        <h3>{{ user.username }}</h3>
     </header>
     <img :src="post.photo" class="postImg" alt="">
     <section class="caption">{{ post.caption }}</section>
     <section class="footer">
-        <div>{{ post.likes.length }}</div>
+        <div>{{ post.likes.length }} Likes</div>
         <div>{{ post.created_on }}</div>
     </section>
 </div>
@@ -30,15 +59,19 @@ const props = defineProps(['post'])
 }
 #pfp{
     aspect-ratio: 1 / 1;
-    width: 75px;
+    width: 50px;
     border-radius: 50%;
     object-fit:cover;
+    cursor: pointer;
 }
-header{
-    
+.post-header{
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
 }
 h3{
     font-size: 20px;
+    margin: 0;
     margin-left: 10px;
 }
 .postImg{
@@ -56,5 +89,7 @@ h3{
     display: flex;
     justify-content: space-between;
     padding: 5px 15px;
+
+    font-weight: bold;
 }
 </style>

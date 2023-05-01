@@ -48,21 +48,9 @@
         }
     }
 
-    async function fetchUserDetails(userid) {
-        try {
-            const response = await fetch(`/api/v1/users/${userid}`);
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data)
-                return data
-            } else {
-                return Promise.reject('Something was wrong with fetch request!');
-            }
-        } catch (error) {
-            console.log(error);
-        }
+    function redirectToNewPost(){
+        router.push({path : `/newform`});
     }
-
 
     onMounted(async () => {
         await fetchLoggedInUser()
@@ -72,8 +60,8 @@
 </script>
 
 <template>
-<button>New Post</button>
-<Post v-for="post in posts" :post="post" />
+<button @click="redirectToNewPost" class="btn bg-primary text-light">New Post</button>
+<Post v-for="post in posts" :post="post"/>
 </template>
 
 <style>
