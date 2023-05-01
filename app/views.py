@@ -163,7 +163,7 @@ def userPosts(user_id):
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['POST'])
 @login_required
-@requires_auth
+#@requires_auth
 def addPost(user_id):
     form = PostForm()
 

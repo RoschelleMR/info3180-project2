@@ -7,7 +7,7 @@
             <div class = "photoCaption">
                 <div class = "form-group mb-3">
                     <label for="photo" class="form-label">Photo</label>
-                    <input type = "file" id = "img" name = "img" class = "formcontrol" accept = ".jpg, .png"/>
+                    <input type = "file" id = "img" name = "photo" class = "formcontrol" accept = ".jpg, .png"/>
                 </div>
                 <div class = "form-group mb-3">
                     <label for="caption" class="form-label">Caption</label>
@@ -28,6 +28,7 @@
     let csrf_token = ref("")
     let fetchResponseType = ref("")
     let fetchResponse = ref("")
+    let loggedUser = ref('')
     
     function getCsrfToken() {
         fetch('/api/v1/csrf-token')
@@ -37,13 +38,38 @@
         csrf_token.value = data.csrf_token;
         })
     }
+
+    async function fetchLoggedInUser(){
+        try {
+            const response = await fetch(`/api/v1/currentuser`);
+            if(response.ok) {
+                const data = await response.json();
+                if(data.hasOwnProperty('message')) {
+                    loggedUser.value = data["message"];
+                }
+                if(loggedUser.value === ''){
+                    //If user is not logged in then redirect to login page
+                    console.log(`User: ${loggedUser.value}`);
+                    router.push({path : '/login'});
+                }
+            } else {
+                return Promise.reject('Something was wrong with fetch request!');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     onMounted(() => {
         getCsrfToken()
+        fetchLoggedInUser()
     })
+
     function createPost(){
-        let PostForm = document.querySelector("#PostForm")
+        let PostForm = document.querySelector("#NewPostForm")
         let formData = new FormData(PostForm)
-        fetch("/api/v1/users/<user_id>/posts", {
+        fetch(`/api/v1/users/${loggedUser.value}/posts`, {
             method: 'POST',
             body: formData,
             headers: {
