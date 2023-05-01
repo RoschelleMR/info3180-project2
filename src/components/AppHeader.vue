@@ -26,7 +26,7 @@
               <RouterLink v-if="isLoggedIn == 'true'" class="nav-link" to="/myprofile">My Profile</RouterLink>
             </li>
             <li class="nav-item">
-              <RouterLink class="nav-link" to="/register">Register</RouterLink>
+              <RouterLink v-if="isLoggedIn == 'false'" class="nav-link" to="/register">Register</RouterLink>
             </li>
             <li class="nav-item">
               <RouterLink v-if="isLoggedIn == 'false'" class="nav-link" to="/login">Login</RouterLink>

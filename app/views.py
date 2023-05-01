@@ -197,11 +197,11 @@ def getPoster(filename):
 @app.route('/api/v1/posts/<postID>/like', methods = ['POST'])
 @login_required
 @requires_auth
-def like(postId):
+def like(postID):
     response = ''
     
     user_id = current_user.id
-    post_id = post_id
+    post_id = postID
     
     like= Likes(post_id, user_id)
     
@@ -248,14 +248,22 @@ def register():
 @login_required
 @requires_auth
 def getFollowers(user_id):
-    followers = Follow.query.filter_by(target_id=user_id).all()
-    followersLst = []
-
-    for follow in followers:
-        followersLst.append(follow.user_id)
     
-    data = {"followers": followersLst}
-    return jsonify(data)
+    if request.method == 'GET':
+        
+        # count = 0
+    
+        followers = Follow.query.filter_by(target_id=user_id).all()
+        followersLst = []
+
+        for follow in followers:
+            # count += 1
+            followersLst.append(follow.user_id)
+            
+        
+        
+        data = {"followers": followersLst}
+        return jsonify(data)
     
 @app.route('/api/v1/users/<user_id>/follow', methods=['POST'])
 @login_required
