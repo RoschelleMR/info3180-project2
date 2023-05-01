@@ -17,9 +17,7 @@
             const response = await fetch(`/api/v1/currentuser`);
             if(response.ok) {
                 const data = await response.json();
-                console.log(data);
                 if(data.hasOwnProperty('message')) {
-                    console.log(`User: ${data["message"]}`);
                     loggedUser.value = data["message"];
                 }
                 if(loggedUser.value === ''){

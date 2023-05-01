@@ -3,11 +3,23 @@ import { ref, onMounted, defineProps } from 'vue';
 import { useRouter } from "vue-router";
 
 const props = defineProps(['post'])
+let csrf_token = ref("")
 let router = useRouter();
+let loggedUser = ref('')
 let user = ref({
     'username': '',
     'profile_photo': ''
 })
+let fetchResponse = ref("")
+let postLiked = ref(false)
+
+function getCsrfToken() {
+    fetch('/api/v1/csrf-token')
+    .then((response) => response.json())
+    .then((data) => {
+    csrf_token.value = data.csrf_token;
+    })
+}
 
 async function fetchUserDetails(userid) {
     try {
@@ -15,7 +27,6 @@ async function fetchUserDetails(userid) {
         if (response.ok) {
             const data = await response.json();
             user.value = data
-            console.log(data)
         } else {
             return Promise.reject('Something was wrong with fetch request!');
         }
@@ -24,12 +35,61 @@ async function fetchUserDetails(userid) {
     }
 }
 
+async function fetchLoggedInUser(){
+    try {
+        const response = await fetch(`/api/v1/currentuser`);
+        if(response.ok) {
+            const data = await response.json();
+            if(data.hasOwnProperty('message')) {
+                loggedUser.value = data["message"];
+
+                props.post.likes.forEach(like => {
+                    if(like.user_id == loggedUser.value){
+                        postLiked.value = true
+                    }
+                });
+            }
+            if(loggedUser.value === ''){
+                console.log(`User: ${loggedUser.value}`);
+                router.push({path : '/login'});
+            }
+        } else {
+            return Promise.reject('Something was wrong with fetch request!');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function likePost(){
+    fetch(`/api/v1/posts/${props.post.id}/like`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrf_token.value
+        }
+    })
+    .then(response => {
+        if(response.ok){return response.json()}
+        else{return Promise.reject('Something was wrong with fetch request!')}
+    })
+    .then(data => {
+        console.log(data);
+        props.post.likes.push(loggedUser.value)
+        postLiked.value = true
+    })
+    .catch(error => {
+        console.log(error);
+    })
+}
+
 function redirectToProfile(){
     router.push({path : `/user/${props.post.user_id}`});
 }
 
 onMounted(async () => {
+    await getCsrfToken()
     await fetchUserDetails(props.post.user_id)
+    await fetchLoggedInUser()
 })
 
 </script>
@@ -44,7 +104,11 @@ onMounted(async () => {
     <img :src="post.photo" class="postImg" alt="">
     <section class="caption">{{ post.caption }}</section>
     <section class="footer">
-        <div><button class="btn bg-primary text-light">Like</button>{{ post.likes.length }} Likes</div>
+        <div>
+            <button v-if="!postLiked" @click="likePost" class="btn bg-primary text-light">Like</button>
+            <button v-if="postLiked" class="btn bg-success text-light">Liked</button>
+            {{ post.likes.length }} Likes
+        </div>
         <div>{{ post.created_on }}</div>
     </section>
 </div>
@@ -88,6 +152,7 @@ h3{
 .footer{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 5px 15px 20px 15px;
     font-weight: bold;
 }

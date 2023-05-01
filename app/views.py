@@ -119,13 +119,14 @@ def allPosts():
 
     for post in posts:
         likes = Likes.query.filter_by(post_id=post.id).all()
+        likes_lst = [{"user_id": like.user_id, "post_id": like.post_id} for like in likes]
         postLst.append({
             "id": post.id,
             "user_id": post.user_id,
             "photo": "/api/v1/photos/{}".format(post.photo),
             "caption": post.caption,
             "created_on": post.created_on,
-            "likes": likes
+            "likes": likes_lst
         })
     
     data = {"posts": postLst}
@@ -196,7 +197,7 @@ def getPoster(filename):
 
 @app.route('/api/v1/posts/<postID>/like', methods = ['POST'])
 @login_required
-@requires_auth
+#@requires_auth
 def like(postID):
     response = ''
     
