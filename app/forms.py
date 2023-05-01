@@ -28,3 +28,7 @@ class RegisterForm(FlaskForm):
             FileRequired(),
             FileAllowed(['jpg', 'png'], 'Images only!')
         ])
+
+class FollowForm(FlaskForm):
+    target_id = StringField('Target', validators=[InputRequired()])
+    user_id = StringField('User', validators=[InputRequired()])
