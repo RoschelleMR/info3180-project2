@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
-from app.forms import PostForm, LoginForm, RegisterForm
+from app.forms import PostForm, LoginForm, RegisterForm, FollowForm
 from app.models import Post, Users, Likes, Follow
 import os, jwt
 from functools import wraps
@@ -76,7 +76,7 @@ def generate_token():
     payload = {
         "sub": 1,
         "iat": timestamp,
-        "exp": timestamp + timedelta(minutes=60)
+        "exp": timestamp + timedelta(hours=24)
     }
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
@@ -91,11 +91,6 @@ def generate_token():
 def index():
     return jsonify(message="This is the beginning of our API")
 
-<<<<<<< HEAD
-# @app.route('/Explore')
-# def explore():
-#     pass
-=======
 @app.route('/api/v1/users/<user_id>', methods=['GET'])
 @login_required
 #@requires_auth
@@ -114,11 +109,10 @@ def getUserDetails(user_id):
         "joined_on": user.joined_on
     }
     return jsonify(data)
->>>>>>> f674269c04260b7e1d7fdb79553bde3c4ab9cfa7
 
 @app.route('/api/v1/posts', methods=['GET'])
 @login_required
-@requires_auth
+#@requires_auth
 def allPosts():
     posts = Post.query.all()
     postLst = []
@@ -150,7 +144,7 @@ def get_user():
 
 @app.route('/api/v1/users/<user_id>/posts', methods=['GET'])
 @login_required
-@requires_auth
+#@requires_auth
 def userPosts(user_id):
     posts = Post.query.filter_by(user_id=user_id).all()
     postLst = []
@@ -252,7 +246,7 @@ def register():
 
 @app.route('/api/v1/users/<user_id>/follow', methods=['GET'])
 @login_required
-@requires_auth
+#@requires_auth
 def getFollowers(user_id):
     
     if request.method == 'GET':
@@ -271,27 +265,26 @@ def getFollowers(user_id):
         data = {"followers": followersLst}
         return jsonify(data)
     
-@app.route('/api/v1/users/<user_id>/follow', methods=['POST'])
+@app.route('/api/v1/users/<target_id>/follow', methods=['POST'])
 @login_required
-@requires_auth
-def follow(user_id):
+#@requires_auth
+def follow(target_id):
+    form = FollowForm()
     if request.method == 'POST':
-        response = request.get_json()
-        target_id = response['target_id']
-        target_user = Users.query.filter_by(target_id=target_id).all()
+        user_id = form.user_id.data
 
         if target_id == user_id:
             return jsonify({'message': "You cannot follow your self"})
 
-        follow = Follow.query.filter_by(user_id=response['user_id'], target_id=response['target_id'])
+        follow = Follow.query.filter_by(user_id=user_id, target_id=target_id).first()
         if follow != None:
             return jsonify({'message' : "You are already following this user"})
 
-        follow = Follow(response['user_id'], response['target_id'])
+        follow = Follow(user_id, target_id)
         db.session.add(follow)
         db.session.commit()
 
-        return jsonify({'message' : f'You are now following {target_user.username}'})
+        return jsonify({'message' : 'Following User'})
     
 
 # Login route
