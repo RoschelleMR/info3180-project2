@@ -1,18 +1,25 @@
 <template>
-    <form @submit.prevent = "createPost" id = "NewPostForm">
-        <h1>New Post</h1>
-        <div class = "photoCaption">
-            <div class = "photo">
-                <label for="photo" class="form-label">Photo</label>
-                <input type = "file" id = "img" name = "img" class = "formcontrol" accept = ".jpg, .png"/>
+    <div class="container">
+        <div class="form-box">
+        <h3 class="header-text">New Post</h3>
+
+        <form @submit.prevent = "createPost" id = "NewPostForm">
+            <div class = "photoCaption">
+                <div class = "form-group mb-3">
+                    <label for="photo" class="form-label">Photo</label>
+                    <input type = "file" id = "img" name = "img" class = "formcontrol" accept = ".jpg, .png"/>
+                </div>
+                <div class = "form-group mb-3">
+                    <label for="caption" class="form-label">Caption</label>
+                    <textarea name="caption" class="formcontrol" ></textarea>
+                </div>
+                <button>Submit</button>
             </div>
-            <div class = "caption">
-                <label for="caption" class="form-label">Caption</label>
-                <textarea name="caption" class="formcontrol" ></textarea>
-            </div>
-            <button>Submit</button>
-        </div>
-    </form>
+        </form>
+    </div>
+    </div>
+    
+    
 </template>
 
 <script setup>
@@ -67,26 +74,46 @@
     -webkit-box-sizing: border-box; 
     box-sizing: border-box; 
 }
-
+.container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px;
+    }
+.form-box{
+    max-width: 500px;
+    width: 100%;
+}
 form{
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-}
-
-label{
-    display: block;
-    font-size: 22px;
-    margin-bottom: 13px;
-}
-
-.photoCaption{
     background-color: white;
-    border-color: gray;
-    box-shadow: 0px 0px 2px 2px gray;
+    padding: 50px;
+    box-shadow: 2px 2px 8px rgb(88, 88, 88);
+}
+.form-group{
+    display: flex;
+    margin-bottom: 15px;
+    flex-direction: column;
+}
+.form-label{
+    font-weight: bold;
+}
+button{
+    background-color: rgb(7, 202, 43);
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 6px;
+}
+button:hover{
+    background-color: rgb(4, 220, 44);
+    color: white;
+    transition: all 0.8s;
 }
 
-button{
-    
-}
 </style>
