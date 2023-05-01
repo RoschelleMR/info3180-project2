@@ -60,10 +60,15 @@
 </script>
 
 <template>
-<button @click="redirectToNewPost" class="btn bg-primary text-light">New Post</button>
-<Post v-for="post in posts" :post="post"/>
+<div class="container">
+    <button @click="redirectToNewPost" class="btn bg-primary text-light">New Post</button>
+    <Post v-for="post in posts" :post="post"/>
+</div>
+
 </template>
 
 <style>
-
+    .btn{
+        max-width: 200px;
+    }
 </style>

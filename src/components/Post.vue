@@ -44,7 +44,7 @@ onMounted(async () => {
     <img :src="post.photo" class="postImg" alt="">
     <section class="caption">{{ post.caption }}</section>
     <section class="footer">
-        <div>{{ post.likes.length }} Likes</div>
+        <div><button class="btn bg-primary text-light">Like</button>{{ post.likes.length }} Likes</div>
         <div>{{ post.created_on }}</div>
     </section>
 </div>
@@ -88,8 +88,10 @@ h3{
 .footer{
     display: flex;
     justify-content: space-between;
-    padding: 5px 15px;
-
+    padding: 5px 15px 20px 15px;
     font-weight: bold;
+}
+.footer .btn{
+    margin-right: 10px;
 }
 </style>
